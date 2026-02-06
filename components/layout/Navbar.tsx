@@ -18,14 +18,13 @@ import {
 import {
     Bell,
     Search,
-    User,
     Plus,
-    Command,
-    ArrowRightLeft
+    ArrowRightLeft,
+    Menu
 } from 'lucide-react';
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
+    padding: theme.spacing(0, 1.5),
     height: '100%',
     position: 'absolute',
     pointerEvents: 'none',
@@ -39,17 +38,22 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     color: 'inherit',
     width: '100%',
     '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+        padding: theme.spacing(0.75, 1, 0.75, 0),
+        paddingLeft: `calc(1em + ${theme.spacing(3.5)})`,
         transition: theme.transitions.create('width'),
         width: '100%',
+        fontSize: '0.8rem',
         [theme.breakpoints.up('md')]: {
-            width: '40ch',
+            width: '32ch',
         },
     },
 }));
 
-export default function Navbar() {
+interface NavbarProps {
+    onToggleSidebar: () => void;
+}
+
+export default function Navbar({ onToggleSidebar }: NavbarProps) {
     return (
         <AppBar
             position="sticky"
@@ -62,76 +66,78 @@ export default function Navbar() {
                 zIndex: (theme) => theme.zIndex.drawer + 1,
             }}
         >
-            <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 2, sm: 4 } }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 1.5, sm: 2 }, minHeight: { xs: 56, sm: 64 } }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        edge="start"
+                        onClick={onToggleSidebar}
+                        sx={{ display: { lg: 'none' }, ml: 0 }}
+                    >
+                        <Menu size={20} />
+                    </IconButton>
+
                     <Box
                         sx={{
-                            display: 'flex',
+                            display: { xs: 'none', md: 'flex' },
                             alignItems: 'center',
-                            bgcolor: alpha('#0f172a', 0.05),
-                            borderRadius: 2,
-                            px: 2,
+                            bgcolor: alpha('#0f172a', 0.04),
+                            borderRadius: 1,
+                            px: 1,
                             position: 'relative'
                         }}
                     >
                         <SearchIconWrapper>
-                            <Search size={18} />
+                            <Search size={14} />
                         </SearchIconWrapper>
                         <StyledInputBase
-                            placeholder="Search anything... (Cmd + K)"
+                            placeholder="Quick search..."
                             inputProps={{ 'aria-label': 'search' }}
                         />
                     </Box>
                 </Box>
 
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 } }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 1.5 } }}>
                     <Button
                         variant="outlined"
                         size="small"
-                        startIcon={<ArrowRightLeft size={16} />}
+                        startIcon={<ArrowRightLeft size={14} />}
                         sx={{
                             display: { xs: 'none', md: 'flex' },
-                            borderRadius: 1.5,
+                            borderRadius: 1,
                             borderColor: 'divider',
-                            color: 'text.secondary'
+                            color: 'text.secondary',
+                            fontSize: '0.75rem'
                         }}
                     >
-                        Switch Company
+                        Switch
                     </Button>
 
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        size="small"
-                        startIcon={<Plus size={16} />}
-                        sx={{
-                            borderRadius: 1.5,
-                            display: { xs: 'none', sm: 'flex' }
-                        }}
-                    >
-                        Quick Bill
-                    </Button>
+                    <IconButton size="small" sx={{ display: { xs: 'flex', md: 'none' }, bgcolor: alpha('#0f172a', 0.03) }}>
+                        <Search size={16} />
+                    </IconButton>
 
                     <Tooltip title="Notifications">
                         <IconButton size="small" sx={{ bgcolor: alpha('#0f172a', 0.03) }}>
                             <Badge variant="dot" color="error">
-                                <Bell size={20} />
+                                <Bell size={18} />
                             </Badge>
                         </IconButton>
                     </Tooltip>
 
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 0.5 }}>
                         <Box sx={{ textAlign: 'right', display: { xs: 'none', md: 'block' } }}>
-                            <Typography variant="body2" sx={{ fontWeight: 600, lineHeight: 1 }}>Admin User</Typography>
-                            <Typography variant="caption" color="text.secondary">Software Owner</Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 700, lineHeight: 1, fontSize: '0.8rem' }}>Admin</Typography>
+                            <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.65rem' }}>Owner</Typography>
                         </Box>
                         <Avatar
                             sx={{
-                                width: 36,
-                                height: 36,
+                                width: 32,
+                                height: 32,
                                 bgcolor: 'primary.main',
-                                fontSize: '0.875rem',
-                                fontWeight: 600
+                                fontSize: '0.75rem',
+                                fontWeight: 700
                             }}
                         >
                             AU

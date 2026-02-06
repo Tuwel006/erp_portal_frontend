@@ -66,7 +66,7 @@ export default function ChatbotPage() {
 
     return (
         <DashboardLayout>
-            <Box sx={{ mb: 2.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box sx={{ mb: 2.5, display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
                 <Box>
                     <Typography variant="h5" sx={{ fontWeight: 700 }}>AI ERP Assistant</Typography>
                     <Typography variant="body2" color="text.secondary">

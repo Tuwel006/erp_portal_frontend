@@ -109,11 +109,11 @@ export default function ProductList() {
 
     return (
         <DashboardLayout>
-            <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box sx={{ mb: 3, display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
                 <Box>
                     <Typography variant="h5" sx={{ fontWeight: 700 }}>Inventory Items</Typography>
                     <Typography variant="body2" color="text.secondary">
-                        Small components, sharp design.
+                        Manage your products and stock.
                     </Typography>
                 </Box>
                 <Button
@@ -122,13 +122,14 @@ export default function ProductList() {
                     size="small"
                     startIcon={<Plus size={16} />}
                     onClick={() => setOpen(true)}
+                    sx={{ px: 2 }}
                 >
                     Add Product
                 </Button>
             </Box>
 
             <Card>
-                <Box sx={{ p: 2, display: 'flex', gap: 1.5, borderBottom: '1px solid', borderColor: 'divider' }}>
+                <Box sx={{ p: 1.5, display: 'flex', flexWrap: 'wrap', gap: 1.5, borderBottom: '1px solid', borderColor: 'divider' }}>
                     <TextField
                         placeholder="Search items..."
                         size="small"

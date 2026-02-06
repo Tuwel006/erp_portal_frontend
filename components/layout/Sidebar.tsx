@@ -11,14 +11,13 @@ import {
     ListItemText,
     Typography,
     Divider,
-    Collapse
+    Collapse,
+    alpha
 } from '@mui/material';
 import {
     LayoutDashboard,
-    Users,
     ShoppingCart,
     ShoppingBag,
-    Package,
     BarChart3,
     Settings,
     ChevronDown,
@@ -33,13 +32,13 @@ import {
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 
-const DRAWER_WIDTH = 280;
+const DRAWER_WIDTH = 260;
 
 const menuItems = [
-    { text: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/' },
+    { text: 'Dashboard', icon: <LayoutDashboard size={18} />, path: '/' },
     {
         text: 'Sales',
-        icon: <ShoppingCart size={20} />,
+        icon: <ShoppingCart size={18} />,
         children: [
             { text: 'New Sale', path: '/sales/new' },
             { text: 'Sales History', path: '/sales/history' },
@@ -48,7 +47,7 @@ const menuItems = [
     },
     {
         text: 'Purchase',
-        icon: <ShoppingBag size={20} />,
+        icon: <ShoppingBag size={18} />,
         children: [
             { text: 'New Purchase', path: '/purchase/new' },
             { text: 'Purchase History', path: '/purchase/history' },
@@ -57,30 +56,36 @@ const menuItems = [
     },
     {
         text: 'Inventory',
-        icon: <BoxIcon size={20} />,
+        icon: <BoxIcon size={18} />,
         children: [
             { text: 'Products', path: '/inventory/products' },
             { text: 'Stock Levels', path: '/inventory/stock' },
             { text: 'Adjustments', path: '/inventory/adjustments' },
         ]
     },
-    { text: 'Reports', icon: <BarChart3 size={20} />, path: '/reports' },
-    { text: 'GST Module', icon: <Receipt size={20} />, path: '/gst' },
-    { text: 'Payments', icon: <Wallet size={20} />, path: '/payments' },
-    { text: 'Chatbot', icon: <MessageSquareText size={20} />, path: '/chatbot' },
+    { text: 'Reports', icon: <BarChart3 size={18} />, path: '/reports' },
+    { text: 'GST Module', icon: <Receipt size={18} />, path: '/gst' },
+    { text: 'Payments', icon: <Wallet size={18} />, path: '/payments' },
+    { text: 'Chatbot', icon: <MessageSquareText size={18} />, path: '/chatbot' },
     {
         text: 'Configuration',
-        icon: <Settings2 size={20} />,
+        icon: <Settings2 size={18} />,
         children: [
             { text: 'Company Setup', path: '/config/company' },
             { text: 'User Management', path: '/config/users' },
             { text: 'Role Management', path: '/config/roles' },
         ]
     },
-    { text: 'Settings', icon: <Settings size={20} />, path: '/settings' },
+    { text: 'Settings', icon: <Settings size={18} />, path: '/settings' },
 ];
 
-export default function Sidebar() {
+interface SidebarProps {
+    open: boolean;
+    onClose: () => void;
+    isMobile: boolean;
+}
+
+export default function Sidebar({ open, onClose, isMobile }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
     const [openMenus, setOpenMenus] = React.useState<Record<string, boolean>>({});
@@ -91,89 +96,80 @@ export default function Sidebar() {
 
     const handleNavigate = (path: string) => {
         router.push(path);
+        if (isMobile) onClose();
     };
 
-    return (
-        <Drawer
-            variant="permanent"
-            sx={{
-                width: DRAWER_WIDTH,
-                flexShrink: 0,
-                '& .MuiDrawer-paper': {
-                    width: DRAWER_WIDTH,
-                    boxSizing: 'border-box',
-                    bgcolor: 'primary.main',
-                    color: 'white',
-                    borderRight: 'none',
-                },
-            }}
-        >
-            <Box sx={{ p: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
+    const drawerContent = (
+        <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ p: 2.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <Box
                     sx={{
-                        width: 40,
-                        height: 40,
+                        width: 32,
+                        height: 32,
                         bgcolor: 'secondary.main',
-                        borderRadius: 1.5,
+                        borderRadius: 1,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center'
                     }}
                 >
-                    <Building2 color="white" size={24} />
+                    <Building2 color="white" size={18} />
                 </Box>
-                <Typography variant="h6" sx={{ fontWeight: 700, letterSpacing: -0.5 }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 800, letterSpacing: -0.5 }}>
                     PRIME ERP
                 </Typography>
             </Box>
 
-            <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)' }} />
+            <Divider sx={{ borderColor: 'rgba(255,255,255,0.08)' }} />
 
-            <List sx={{ px: 2, py: 2 }}>
+            <List sx={{ px: 1.5, py: 2, flexGrow: 1 }}>
                 {menuItems.map((item) => (
                     <React.Fragment key={item.text}>
-                        <ListItem disablePadding sx={{ mb: 0.5 }}>
+                        <ListItem disablePadding sx={{ mb: 0.25 }}>
                             <ListItemButton
                                 onClick={() => item.children ? handleToggleMenu(item.text) : handleNavigate(item.path!)}
                                 sx={{
-                                    borderRadius: 1.5,
+                                    borderRadius: 1,
+                                    py: 1,
                                     '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' },
                                     bgcolor: pathname === item.path ? 'rgba(255,255,255,0.1)' : 'transparent',
                                 }}
                             >
-                                <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                                <ListItemIcon sx={{ color: 'inherit', minWidth: 32 }}>
                                     {item.icon}
                                 </ListItemIcon>
                                 <ListItemText
                                     primary={item.text}
                                     primaryTypographyProps={{
-                                        fontSize: '0.875rem',
-                                        fontWeight: pathname === item.path ? 600 : 500
+                                        fontSize: '0.8rem',
+                                        fontWeight: pathname === item.path ? 700 : 500,
+                                        color: pathname === item.path ? 'white' : 'rgba(255,255,255,0.8)'
                                     }}
                                 />
-                                {item.children && (openMenus[item.text] ? <ChevronDown size={16} /> : <ChevronRight size={16} />)}
+                                {item.children && (openMenus[item.text] ? <ChevronDown size={14} /> : <ChevronRight size={14} />)}
                             </ListItemButton>
                         </ListItem>
                         {item.children && (
                             <Collapse in={openMenus[item.text]} timeout="auto" unmountOnExit>
-                                <List component="div" disablePadding sx={{ mb: 1 }}>
+                                <List component="div" disablePadding sx={{ mb: 0.5 }}>
                                     {item.children.map((child) => (
                                         <ListItemButton
                                             key={child.text}
                                             onClick={() => handleNavigate(child.path)}
                                             sx={{
-                                                pl: 6,
-                                                borderRadius: 1.5,
+                                                pl: 5.5,
+                                                py: 0.75,
+                                                borderRadius: 1,
                                                 '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' },
-                                                bgcolor: pathname === child.path ? 'rgba(255,255,255,0.1)' : 'transparent',
+                                                bgcolor: pathname === child.path ? alpha('#fff', 0.08) : 'transparent',
                                             }}
                                         >
                                             <ListItemText
                                                 primary={child.text}
                                                 primaryTypographyProps={{
-                                                    fontSize: '0.8rem',
-                                                    fontWeight: pathname === child.path ? 600 : 400,
-                                                    color: pathname === child.path ? 'white' : 'rgba(255,255,255,0.7)'
+                                                    fontSize: '0.75rem',
+                                                    fontWeight: pathname === child.path ? 700 : 400,
+                                                    color: pathname === child.path ? 'white' : 'rgba(255,255,255,0.6)'
                                                 }}
                                             />
                                         </ListItemButton>
@@ -185,26 +181,67 @@ export default function Sidebar() {
                 ))}
             </List>
 
-            <Box sx={{ mt: 'auto', p: 2 }}>
+            <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'rgba(255,255,255,0.08)' }}>
                 <Box
                     sx={{
-                        p: 2,
-                        bgcolor: 'rgba(255,255,255,0.05)',
-                        borderRadius: 2,
+                        p: 1.5,
+                        bgcolor: 'rgba(255,255,255,0.04)',
+                        borderRadius: 1,
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 2
+                        gap: 1.5
                     }}
                 >
-                    <Box sx={{ bgcolor: 'secondary.main', p: 1, borderRadius: 1 }}>
-                        <Lock size={16} />
+                    <Box sx={{ bgcolor: 'secondary.main', p: 0.75, borderRadius: 0.75 }}>
+                        <Lock size={14} color="white" />
                     </Box>
                     <Box>
-                        <Typography variant="body2" sx={{ fontWeight: 600 }}>Standard Plan</Typography>
-                        <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)' }}>Manage 2 Companies</Typography>
+                        <Typography variant="caption" sx={{ fontWeight: 700, display: 'block', lineHeight: 1.2 }}>Standard Plan</Typography>
+                        <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.65rem' }}>Active Account</Typography>
                     </Box>
                 </Box>
             </Box>
-        </Drawer>
+        </Box>
+    );
+
+    return (
+        <>
+            <Drawer
+                variant="temporary"
+                open={open}
+                onClose={onClose}
+                ModalProps={{ keepMounted: true }}
+                sx={{
+                    display: { xs: 'block', lg: 'none' },
+                    '& .MuiDrawer-paper': {
+                        width: DRAWER_WIDTH,
+                        boxSizing: 'border-box',
+                        bgcolor: 'primary.main',
+                        color: 'white',
+                        borderRight: 'none',
+                    },
+                }}
+            >
+                {drawerContent}
+            </Drawer>
+            <Drawer
+                variant="permanent"
+                sx={{
+                    display: { xs: 'none', lg: 'block' },
+                    width: DRAWER_WIDTH,
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': {
+                        width: DRAWER_WIDTH,
+                        boxSizing: 'border-box',
+                        bgcolor: 'primary.main',
+                        color: 'white',
+                        borderRight: 'none',
+                    },
+                }}
+                open
+            >
+                {drawerContent}
+            </Drawer>
+        </>
     );
 }
